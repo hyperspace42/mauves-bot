@@ -1,3 +1,4 @@
+
 export interface INatsChatGlobalMessage {
   sender: string;
   message: string;
@@ -12,5 +13,6 @@ export interface IServerStatus {
   players: {
     online: number,
     max: number
+    list?: string[]
   }
 }
