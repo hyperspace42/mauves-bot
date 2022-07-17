@@ -4,7 +4,7 @@ import { MessageEmbed, TextChannel } from 'discord.js';
 
 import { bot } from './index';
 
-const commandsListDescription: {
+const commandsDescriptionList: {
   [key: string]: string;
 } = {
   commands: 'Отправляет все команды бота',
@@ -24,8 +24,8 @@ export const sendCommandsEmbed = async function (channelId: string): Promise<voi
     .setColor('BLURPLE')
     .setThumbnail(bot.user?.avatarURL() as string);
 
-  for (const command in commandsListDescription) {
-    commandEmbed.addField(`!${command}`, commandsListDescription[command]);
+  for (const command in commandsDescriptionList) {
+    commandEmbed.addField(`!${command}`, commandsDescriptionList[command]);
   }
 
   await channel.send({ embeds: [commandEmbed] });
