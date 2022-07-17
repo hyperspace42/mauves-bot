@@ -7,6 +7,8 @@ import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from './co
 
 import { deleteMessage as deleteMessageFromMinecraftMessagesChannel } from './minecraftMessagesChannel';
 
+import { scheduleBotActivity } from './scheduleBotActivity'
+
 const prefix: string = '!';
 
 export const bot: Client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -20,6 +22,8 @@ const logCommandMessage = function (message: Message): void {
 
 export const startBot = function (TOKEN: string) {
   bot.once('ready', () => {
+    scheduleBotActivity()
+
     console.log('Bot started');
   });
 
