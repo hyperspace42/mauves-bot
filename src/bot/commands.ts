@@ -2,9 +2,6 @@ import { IServerStatus } from '../types';
 
 import { MessageEmbed, TextChannel } from 'discord.js';
 
-import PlayersOnlineDto from '../dtos/playersOnlineDto';
-import ServerStatusDto from '../dtos/serverStatusDto';
-
 import { bot } from './index';
 
 const commandsListDescription: {
@@ -43,16 +40,14 @@ export const sendStatusEmbed = async function (channelId: string, status: IServe
 
   let statusEmbed: MessageEmbed;
 
-  const statusDto = new ServerStatusDto(status);
-
   if (status.online) {
     statusEmbed = new MessageEmbed()
       .setColor('BLURPLE')
       .setTitle('Статус сервера')
-      .setDescription(statusDto.description.join(''))
+      .setDescription(status.description.join(''))
       .setThumbnail(bot.user?.avatarURL() as string)
       .addField('Сервер онлайн', 'Да')
-      .addField('Версия', statusDto.version);
+      .addField('Версия', status.version);
   } else {
     statusEmbed = new MessageEmbed()
       .setColor('BLURPLE')
@@ -73,18 +68,16 @@ export const sendOnlinePlayersEmbed = async function (channelId: string, status:
 
   let statusEmbed: MessageEmbed;
 
-  const playersOnlineDto = new PlayersOnlineDto(status);
-
   if (status.online) {
     statusEmbed = new MessageEmbed()
       .setColor('BLURPLE')
       .setTitle('Игроки на сервере')
-      .setDescription(playersOnlineDto.description.join(''))
+      .setDescription(status.description.join(''))
       .setThumbnail(bot.user?.avatarURL() as string)
-      .addField('Сейчас на сервере', playersOnlineDto.players.online.toString());
+      .addField('Сейчас на сервере', status.players.online.toString());
 
-    if (playersOnlineDto.players.list?.length) {
-      statusEmbed.addField('Игроки онлайн', playersOnlineDto.players.list.join('\n'));
+    if (status.players.list?.length) {
+      statusEmbed.addField('Игроки онлайн', status.players.list.join('\n'));
     }
   } else {
     statusEmbed = new MessageEmbed()
