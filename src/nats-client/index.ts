@@ -8,7 +8,8 @@ nconf.defaults({
 import { INatsChatGlobalMessage } from '../types';
 
 import { connect, StringCodec, NatsConnection, Subscription } from 'nats';
-import { sendMinecraftMessageEmbed } from '../bot/index';
+
+import { sendMessageEmbed } from '../bot/minecraftMessagesChannel';
 
 const NATS_SERVER_URL: string = nconf.get('NATS_SERVER_URL');
 
@@ -59,7 +60,7 @@ export const listenChatGlobal = async function (): Promise<void> {
     const decodedMsg: string = stringCodec.decode(encodedMsg.data);
     const msg: INatsChatGlobalMessage = parseJsonFromMessage(decodedMsg);
 
-    sendMinecraftMessageEmbed(msg);
+    sendMessageEmbed(msg);
   }
 
   (await natsConnetionPromise).drain();

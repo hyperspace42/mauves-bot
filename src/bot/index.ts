@@ -1,47 +1,21 @@
-import nconf from 'nconf';
+import dayjs from 'dayjs';
 
-nconf.file(`${process.cwd()}/config.json`);
-
-import { INatsChatGlobalMessage } from 'types';
-
-import { Client, Intents, Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Client, Intents, Message } from 'discord.js';
 
 import getServerStatus from '../utils/getServerStatus';
-import getHeadImageLinkByUsername from '../utils/getHeadImageLinkByUsername';
+import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from './commands';
 
-import { logCommandMessage, sendOnlinePlayersEmbed, sendStatusEmbed } from './commandsFunctions';
+import { deleteMessage as deleteMessageFromMinecraftMessagesChannel } from './minecraftMessagesChannel';
 
 const prefix: string = '!';
-const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
 
 export const bot: Client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
-export const sendMinecraftMessageEmbed = async function (params: INatsChatGlobalMessage) {
-  const channel = (await bot.channels.cache.get(MINECRAFT_MESSAGES_CHANNEL_ID)) as TextChannel | null;
+const logCommandMessage = function (message: Message): void {
+  const authorUsername: string = `${message.author.username}#${message.author.discriminator}`;
+  const time = dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]');
 
-  if (!channel) {
-    return;
-  }
-
-  const minecraftHeadImageLink: string = await getHeadImageLinkByUsername(params.sender);
-
-  const statusEmbed: MessageEmbed = new MessageEmbed()
-    .setColor('#7d52ff')
-    .setTitle(params.sender)
-    .setDescription(params.message)
-    .setThumbnail(minecraftHeadImageLink)
-    .setFooter({ text: 'Чат сервера Mauves' });
-
-  channel.send({ embeds: [statusEmbed] });
-};
-
-const deleteMessageInMinecraftMessagesChannel = function (message: Message): boolean {
-  if (message.channelId === MINECRAFT_MESSAGES_CHANNEL_ID) {
-    message.delete();
-    return true;
-  }
-
-  return false;
+  console.log(`${time} [${authorUsername}] ${message.content}`);
 };
 
 export const startBot = function (TOKEN: string) {
@@ -51,15 +25,18 @@ export const startBot = function (TOKEN: string) {
 
   bot.on('messageCreate', async (message: Message) => {
     if (message.author.bot) return;
-    if (deleteMessageInMinecraftMessagesChannel(message)) return;
+    if (deleteMessageFromMinecraftMessagesChannel(message)) return;
     if (message.content[0] != prefix) return;
 
-    logCommandMessage(message)
+    logCommandMessage(message);
 
     const command: string = message.content.slice(1);
 
     try {
       switch (command) {
+        case 'commands':
+          sendCommandsEmbed(message.channelId);
+          break;
         case 'status':
           sendStatusEmbed(message.channelId, await getServerStatus());
           break;

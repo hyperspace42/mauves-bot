@@ -1,23 +1,41 @@
 import { IServerStatus } from '../types';
 
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
-
-import dayjs from 'dayjs'
+import { MessageEmbed, TextChannel } from 'discord.js';
 
 import PlayersOnlineDto from '../dtos/playersOnlineDto';
 import ServerStatusDto from '../dtos/serverStatusDto';
 
-import { bot } from './index'
+import { bot } from './index';
 
-export const logCommandMessage = function(message: Message): void {
-  const authorUsername: string = `${message.author.username}#${message.author.discriminator}`
-  const time = dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]')
+const commandsListDescription: {
+  [key: string]: string;
+} = {
+  commands: 'Отправляет все команды бота',
+  status: 'Отправляет статус сервера',
+  players: 'Отправляет список игроков на сервере в данный момент',
+};
 
-  console.log(`${time} [${authorUsername}] ${message.content}`);
-}
+export const sendCommandsEmbed = async function (channelId: string): Promise<void> {
+  const channel = bot.channels.cache.get(channelId) as TextChannel | null;
+
+  if (!channel) {
+    return;
+  }
+
+  const commandEmbed = new MessageEmbed()
+    .setTitle('Команды бота')
+    .setColor('BLURPLE')
+    .setThumbnail(bot.user?.avatarURL() as string);
+
+  for (const command in commandsListDescription) {
+    commandEmbed.addField(`!${command}`, commandsListDescription[command]);
+  }
+
+  await channel.send({ embeds: [commandEmbed] });
+};
 
 export const sendStatusEmbed = async function (channelId: string, status: IServerStatus) {
-  const channel = (await bot.channels.cache.get(channelId)) as TextChannel | null;
+  const channel = bot.channels.cache.get(channelId) as TextChannel | null;
 
   if (!channel) {
     return;
@@ -25,7 +43,7 @@ export const sendStatusEmbed = async function (channelId: string, status: IServe
 
   let statusEmbed: MessageEmbed;
 
-  const statusDto = new ServerStatusDto(status)
+  const statusDto = new ServerStatusDto(status);
 
   if (status.online) {
     statusEmbed = new MessageEmbed()
@@ -43,11 +61,11 @@ export const sendStatusEmbed = async function (channelId: string, status: IServe
       .addField('Сервер онлайн', 'Нет');
   }
 
-  channel.send({ embeds: [statusEmbed] });
+  await channel.send({ embeds: [statusEmbed] });
 };
 
 export const sendOnlinePlayersEmbed = async function (channelId: string, status: IServerStatus) {
-  const channel = (await bot.channels.cache.get(channelId)) as TextChannel | null;
+  const channel = bot.channels.cache.get(channelId) as TextChannel | null;
 
   if (!channel) {
     return;
@@ -55,7 +73,7 @@ export const sendOnlinePlayersEmbed = async function (channelId: string, status:
 
   let statusEmbed: MessageEmbed;
 
-  const playersOnlineDto = new PlayersOnlineDto(status)
+  const playersOnlineDto = new PlayersOnlineDto(status);
 
   if (status.online) {
     statusEmbed = new MessageEmbed()
@@ -63,11 +81,11 @@ export const sendOnlinePlayersEmbed = async function (channelId: string, status:
       .setTitle('Игроки на сервере')
       .setDescription(playersOnlineDto.description.join(''))
       .setThumbnail(bot.user?.avatarURL() as string)
-      .addField('Сейчас на сервере', playersOnlineDto.players.online.toString())
+      .addField('Сейчас на сервере', playersOnlineDto.players.online.toString());
 
-      if (playersOnlineDto.players.list?.length) {
-        statusEmbed.addField('Игроки онлайн', playersOnlineDto.players.list.join('\n'))
-      }
+    if (playersOnlineDto.players.list?.length) {
+      statusEmbed.addField('Игроки онлайн', playersOnlineDto.players.list.join('\n'));
+    }
   } else {
     statusEmbed = new MessageEmbed()
       .setColor('BLURPLE')
@@ -76,5 +94,5 @@ export const sendOnlinePlayersEmbed = async function (channelId: string, status:
       .addField('Сервер онлайн', 'Нет');
   }
 
-  channel.send({ embeds: [statusEmbed] });
+  await channel.send({ embeds: [statusEmbed] });
 };
