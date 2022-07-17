@@ -1,13 +1,9 @@
-import { CronJob } from 'cron'
-
 import { setBotActivity } from './botActivity'
 
-export const scheduleBotActivity = function(): void {
-  const job = new CronJob('0 5 * * * *', function() {
-    setBotActivity()
-  })
+const fiveMinutes: number = 1000 * 60 * 60 * 5
 
+export const scheduleBotActivity = function(): void {
   setBotActivity()
 
-  job.start()
+  setInterval(setBotActivity, fiveMinutes)
 }
