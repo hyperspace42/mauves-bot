@@ -11,12 +11,10 @@ export default async function getHeadImageLinkByUsername(username: string): Prom
   const data = await axios.get(mojangUUIDApiUrl);
   const dataStatusCode: number = data.status;
 
-  switch (dataStatusCode) {
-    case userFoundStatusCode:
-      const uuid: string = data.data.id;
-      return `https://crafatar.com/avatars/${uuid}?size=128&default=MHF_Steve&overlay`;
-
-    default:
-      return `https://crafatar.com/avatars/${steveUUId}?size=128&default=MHF_Steve`;
+  if (dataStatusCode === userFoundStatusCode) {
+    const uuid: string = data.data.id;
+    return `https://crafatar.com/avatars/${uuid}?size=128&default=MHF_Steve&overlay`;
   }
+
+  return `https://crafatar.com/avatars/${steveUUId}?size=128&default=MHF_Steve`;
 }
