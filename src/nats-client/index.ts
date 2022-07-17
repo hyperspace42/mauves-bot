@@ -34,20 +34,6 @@ const subscribeToChatGlobal = async function (connectionPromise: Promise<NatsCon
   return sub;
 };
 
-const parseJsonFromMessage = function (message: string): INatsChatGlobalMessage {
-  const splittedMessage: string[] = message.split(' ');
-
-  const senderName: string = splittedMessage[1].slice(0, splittedMessage[1].length - 1);
-  const messageText: string = message.slice(message.indexOf('"') + 1, message.length - 2);
-
-  const messageJson: INatsChatGlobalMessage = {
-    sender: senderName,
-    message: messageText,
-  };
-
-  return messageJson;
-};
-
 // #endregion
 
 const natsConnetionPromise: Promise<NatsConnection> = connectToNats();
@@ -58,7 +44,7 @@ export const listenChatGlobal = async function (): Promise<void> {
 
   for await (const encodedMsg of sub) {
     const decodedMsg: string = stringCodec.decode(encodedMsg.data);
-    const msg: INatsChatGlobalMessage = parseJsonFromMessage(decodedMsg);
+    const msg: INatsChatGlobalMessage = JSON.parse(decodedMsg);
 
     sendMessageEmbed(msg);
   }
