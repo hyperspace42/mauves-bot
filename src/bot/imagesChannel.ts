@@ -68,8 +68,6 @@ export const handleImageChannelMessage = async function (message: Message): Prom
     return;
   }
 
-  await message.delete();
-
   const messageData: IMessageData = getMessageData(message);
 
   const imageEmbedMessage: Message = await sendImageEmbedMessage(channel, attachedImagesUrls, messageData);
@@ -80,4 +78,6 @@ export const handleImageChannelMessage = async function (message: Message): Prom
     name: '💬 Комментарии',
     autoArchiveDuration: 4320,
   });
+
+  await message.delete();
 };

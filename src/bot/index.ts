@@ -1,3 +1,7 @@
+import nconf from 'nconf';
+
+nconf.file(`${process.cwd()}/config.json`);
+
 import dayjs from 'dayjs';
 
 import { Client, Intents, Message } from 'discord.js';
@@ -7,7 +11,12 @@ import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from './co
 
 import { deleteMessage as deleteMessageFromMinecraftMessagesChannel } from './minecraftMessagesChannel';
 import { handleImageChannelMessage } from './imagesChannel';
-import { scheduleBotActivity } from './scheduleBotActivity'
+import { scheduleBotActivity } from './scheduleBotActivity';
+
+const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
+const IMAGES_CHANNEL_ID: string = nconf.get('IMAGES_CHANNEL_ID');
+
+const excludedChannelsIdsForCommands: string[] = [MINECRAFT_MESSAGES_CHANNEL_ID, IMAGES_CHANNEL_ID];
 
 const prefix: string = '!';
 
@@ -22,7 +31,7 @@ const logCommandMessage = function (message: Message): void {
 
 export const startBot = function (TOKEN: string) {
   bot.once('ready', () => {
-    scheduleBotActivity()
+    scheduleBotActivity();
 
     console.log('Bot started');
   });
@@ -31,12 +40,15 @@ export const startBot = function (TOKEN: string) {
     if (message.author.bot) return;
     if (deleteMessageFromMinecraftMessagesChannel(message)) return;
 
-    await handleImageChannelMessage(message)
-    
+    await handleImageChannelMessage(message);
+
     if (message.content[0] !== prefix) return;
 
-    logCommandMessage(message);
+    if (excludedChannelsIdsForCommands.includes(message.channelId)) {
+      return;
+    }
 
+    logCommandMessage(message);
 
     const command: string = message.content.slice(1);
 
