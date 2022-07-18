@@ -2,6 +2,8 @@ import { IServerStatus } from '../types';
 
 import { MessageEmbed, TextChannel } from 'discord.js';
 
+import getDiscordChannelById from '../utils/getDiscordChannelById';
+
 import { bot } from './index';
 
 const commandsDescriptionList: {
@@ -13,7 +15,7 @@ const commandsDescriptionList: {
 };
 
 export const sendCommandsEmbed = async function (channelId: string): Promise<void> {
-  const channel = bot.channels.cache.get(channelId) as TextChannel | null;
+  const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
 
   if (!channel) {
     return;
@@ -32,7 +34,7 @@ export const sendCommandsEmbed = async function (channelId: string): Promise<voi
 };
 
 export const sendStatusEmbed = async function (channelId: string, status: IServerStatus) {
-  const channel = bot.channels.cache.get(channelId) as TextChannel | null;
+  const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
 
   if (!channel) {
     return;
@@ -60,7 +62,7 @@ export const sendStatusEmbed = async function (channelId: string, status: IServe
 };
 
 export const sendOnlinePlayersEmbed = async function (channelId: string, status: IServerStatus) {
-  const channel = bot.channels.cache.get(channelId) as TextChannel | null;
+  const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
 
   if (!channel) {
     return;

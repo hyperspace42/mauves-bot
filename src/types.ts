@@ -1,4 +1,3 @@
-
 export interface INatsChatGlobalMessage {
   sender: string;
   message: string;

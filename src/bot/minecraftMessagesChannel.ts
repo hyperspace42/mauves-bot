@@ -6,13 +6,12 @@ import { INatsChatGlobalMessage } from 'types';
 
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import getHeadImageLinkByUsername from '../utils/getHeadImageLinkByUsername';
-
-import { bot } from './index';
+import getDiscordChannelById from '../utils/getDiscordChannelById';
 
 const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
 
 export const sendMessageEmbed = async function (params: INatsChatGlobalMessage) {
-  const channel = (await bot.channels.cache.get(MINECRAFT_MESSAGES_CHANNEL_ID)) as TextChannel | null;
+  const channel = await getDiscordChannelById(MINECRAFT_MESSAGES_CHANNEL_ID) as TextChannel | null;
 
   if (!channel) {
     return;
