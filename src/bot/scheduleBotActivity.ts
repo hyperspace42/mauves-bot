@@ -1,6 +1,6 @@
 import { setBotActivity } from './botActivity'
 
-const fiveMinutes: number = 1000 * 60 * 60 * 5
+const fiveMinutes: number = 1000 * 60 * 5
 
 export const scheduleBotActivity = function(): void {
   setBotActivity()
