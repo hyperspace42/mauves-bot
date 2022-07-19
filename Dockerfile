@@ -4,6 +4,6 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY . .
 
-RUN yarn
+RUN yarn install --frozen-file
 
 CMD yarn run dev
