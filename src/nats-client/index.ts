@@ -34,20 +34,28 @@ const subscribeToChatGlobal = async function (connectionPromise: Promise<NatsCon
   return sub;
 };
 
-// #endregion
-
-const natsConnetionPromise: Promise<NatsConnection> = connectToNats();
-const subPromise: Promise<Subscription> = subscribeToChatGlobal(natsConnetionPromise);
+// #endregio
 
 export const listenChatGlobal = async function (): Promise<void> {
-  const sub = await subPromise;
+  try {
+    const natsConnetionPromise: Promise<NatsConnection> = connectToNats();
+    const subPromise: Promise<Subscription> = subscribeToChatGlobal(natsConnetionPromise);
 
-  for await (const encodedMsg of sub) {
-    const decodedMsg: string = stringCodec.decode(encodedMsg.data);
-    const msg: INatsChatGlobalMessage = JSON.parse(decodedMsg);
+    const sub = await subPromise;
 
-    sendMessageEmbed(msg);
+    for await (const encodedMsg of sub) {
+      try {
+        const decodedMsg: string = stringCodec.decode(encodedMsg.data);
+        const msg: INatsChatGlobalMessage = JSON.parse(decodedMsg);
+
+        sendMessageEmbed(msg);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    (await natsConnetionPromise).drain();
+  } catch (error) {
+    console.log(error);
   }
-
-  (await natsConnetionPromise).drain();
 };
