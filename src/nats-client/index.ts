@@ -38,7 +38,7 @@ const subscribeToChannel = async function(connectionPromise: Promise<NatsConnect
 
 const natsConnetionPromise: Promise<NatsConnection> = connectToNats();
 
-export const listenChanel = async function (channelName: string, handler: Function): Promise<void> {
+export default async function listenChannel(channelName: string, handler: Function): Promise<void> {
   try {
     const subPromise: Promise<Subscription> = subscribeToChannel(natsConnetionPromise, channelName);
     const sub = await subPromise;
