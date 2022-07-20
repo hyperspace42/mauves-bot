@@ -1,18 +1,14 @@
-import nconf from "nconf";
+import nconf from 'nconf';
 
 nconf.file(`${process.cwd()}/config.json`);
 nconf.defaults({
-  NATS_SERVER_URL: "0.0.0.0:4222",
+  NATS_SERVER_URL: '0.0.0.0:4222',
 });
 
-import { INatsChatGlobalMessage } from "../types";
+import { connect, NatsConnection, StringCodec, Subscription } from 'nats';
 
-import { connect, NatsConnection, StringCodec, Subscription } from "nats";
-
-import { sendMessageEmbed } from "../bot/minecraftMessagesChannel";
-
-const NATS_SERVER_URL: string = nconf.get("NATS_SERVER_URL");
-const NATS_TOKEN: string = nconf.get("NATS_TOKEN");
+const NATS_SERVER_URL: string = nconf.get('NATS_SERVER_URL');
+const NATS_TOKEN: string = nconf.get('NATS_TOKEN');
 
 const stringCodec = StringCodec();
 
@@ -29,33 +25,30 @@ const connectToNats = async function (): Promise<NatsConnection> {
   return natsConnetion;
 };
 
-const subscribeToChatGlobal = async function (
-  connectionPromise: Promise<NatsConnection>
-): Promise<Subscription> {
+const subscribeToChannel = async function(connectionPromise: Promise<NatsConnection>, channelName: string): Promise<Subscription> {
   const natsConnetion: NatsConnection = await connectionPromise;
-  const sub: Subscription = await natsConnetion.subscribe("chat.global");
+  const sub: Subscription = await natsConnetion.subscribe(channelName);
 
-  console.log("Subscribed on chat.global");
+  console.log(`Subscribed on ${channelName}`);
 
   return sub;
-};
+}
 
-// #endregio
+// #endregion
 
-export const listenChatGlobal = async function (): Promise<void> {
+const natsConnetionPromise: Promise<NatsConnection> = connectToNats();
+
+export const listenChanel = async function (channelName: string, handler: Function): Promise<void> {
   try {
-    const natsConnetionPromise: Promise<NatsConnection> = connectToNats();
-    const subPromise: Promise<Subscription> =
-      subscribeToChatGlobal(natsConnetionPromise);
-
+    const subPromise: Promise<Subscription> = subscribeToChannel(natsConnetionPromise, channelName);
     const sub = await subPromise;
 
     for await (const encodedMsg of sub) {
       try {
         const decodedMsg: string = stringCodec.decode(encodedMsg.data);
-        const msg: INatsChatGlobalMessage = JSON.parse(decodedMsg);
+        const msg = JSON.parse(decodedMsg);
 
-        sendMessageEmbed(msg);
+        handler(msg);
       } catch (error) {
         console.log(error);
       }

@@ -4,7 +4,7 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import { Message, MessageAttachment, MessageEmbed, TextChannel, Collection } from 'discord.js';
 
-import getDiscordChannelById from '../utils/getDiscordChannelById';
+import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
 
 const IMAGES_CHANNEL_ID: string = nconf.get('IMAGES_CHANNEL_ID');
 const TRASH_IMAGES_CHANNEL_ID: string = nconf.get('TRASH_IMAGES_CHANNEL_ID');

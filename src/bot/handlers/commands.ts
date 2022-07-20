@@ -1,10 +1,10 @@
-import { IServerStatus } from '../types';
+import { IServerStatus } from '../../types';
 
 import { MessageEmbed, TextChannel } from 'discord.js';
 
-import getDiscordChannelById from '../utils/getDiscordChannelById';
+import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
 
-import { bot } from './index';
+import { bot } from '@bot/index';
 
 const commandsDescriptionList: {
   [key: string]: string;

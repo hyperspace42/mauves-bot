@@ -1,10 +1,10 @@
-import { bot } from './index';
+import { bot } from '@bot/index';
 
-import getServerStatus from '../utils/getServerStatus';
+import getServerStatus from '@utils/getServerStatus';
 
-import { IServerStatus } from 'types';
+import { IServerStatus } from '$types';
 
-export const setBotActivity = async function (): Promise<void> {
+export default async function setBotActivity(): Promise<void> {
   const serverStatus: IServerStatus = await getServerStatus();
 
   const playersOnline: number = serverStatus.players.online;
@@ -12,4 +12,4 @@ export const setBotActivity = async function (): Promise<void> {
   if (bot.user) {
     bot.user.setActivity(`Онлайн: ${playersOnline}`, { type: 'PLAYING' });
   }
-};
+}

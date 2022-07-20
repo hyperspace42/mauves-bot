@@ -3,6 +3,10 @@ export interface INatsChatGlobalMessage {
   message: string;
 }
 
+export interface INatsMinecraftServerConnetionMessage {
+  player: string;
+}
+
 export interface IServerStatus {
   online: boolean
   ip: string;

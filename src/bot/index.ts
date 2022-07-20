@@ -6,12 +6,12 @@ import dayjs from 'dayjs';
 
 import { Client, Intents, Message } from 'discord.js';
 
-import getServerStatus from '../utils/getServerStatus';
-import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from './commands';
+import getServerStatus from '@utils/getServerStatus';
+import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from '@bot/handlers/commands';
 
-import { deleteMessage as deleteMessageFromMinecraftMessagesChannel } from './minecraftMessagesChannel';
-import { handleImageChannelMessage } from './imagesChannel';
-import { scheduleBotActivity } from './scheduleBotActivity';
+import { deleteMessage as deleteMessageFromMinecraftMessagesChannel } from '@bot/nats/minecraftMessagesChannel';
+import { handleImageChannelMessage } from '@bot/handlers/imagesChannel';
+import setBotActivity from '@bot/utils/botActivity';
 
 const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
 const IMAGES_CHANNEL_ID: string = nconf.get('IMAGES_CHANNEL_ID');
@@ -31,7 +31,7 @@ const logCommandMessage = function (message: Message): void {
 
 export const startBot = function (TOKEN: string) {
   bot.once('ready', () => {
-    scheduleBotActivity();
+    setBotActivity();
 
     console.log('Bot started');
   });

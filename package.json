@@ -17,7 +17,17 @@
     "axios": "^0.27.2",
     "dayjs": "^1.11.3",
     "discord.js": "^13.8.1",
+    "module-alias": "^2.2.2",
     "nats": "^2.7.1",
     "nconf": "^0.12.0"
-  }
+  },
+  "_moduleAliases": {
+    "@utils": "src/utils/",
+    "@bot": "src/bot/",
+    "@nats-client": "src/nats-client/",
+    "$types": "src/types"
+  },
+  "_moduleDirectories": [
+    "node_modules_custom"
+  ]
 }
