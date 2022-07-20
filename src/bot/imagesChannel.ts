@@ -7,6 +7,7 @@ import { Message, MessageAttachment, MessageEmbed, TextChannel, Collection } fro
 import getDiscordChannelById from '../utils/getDiscordChannelById';
 
 const IMAGES_CHANNEL_ID: string = nconf.get('IMAGES_CHANNEL_ID');
+const TRASH_IMAGES_CHANNEL_ID: string = nconf.get('TRASH_IMAGES_CHANNEL_ID');
 
 interface IMessageData {
   authorUsername: string;
@@ -35,9 +36,9 @@ const getMessageData = function (message: Message): IMessageData {
 
   return { authorUsername, authorAvatarUrl, messageText };
 };
-
 const sendImageEmbedMessage = async function (
   channel: TextChannel,
+  trashChannel: TextChannel,
   attachedImagesUrls: string[],
   messageData: IMessageData
 ): Promise<Message> {
@@ -49,6 +50,8 @@ const sendImageEmbedMessage = async function (
     .setDescription(messageData.messageText)
     .setImage(attachedImagesUrls[0]);
 
+  trashChannel.send(attachedImagesUrls[0])
+
   const imageEmbedMessage: Message = await channel.send({ embeds: [imageEmbed] });
 
   return imageEmbedMessage;
@@ -56,8 +59,9 @@ const sendImageEmbedMessage = async function (
 
 export const handleImageChannelMessage = async function (message: Message): Promise<void> {
   const channel = (await getDiscordChannelById(IMAGES_CHANNEL_ID)) as TextChannel | null;
+  const trashChannel = (await getDiscordChannelById(TRASH_IMAGES_CHANNEL_ID)) as TextChannel | null;
 
-  if (!channel || message.channelId !== IMAGES_CHANNEL_ID) {
+  if (!channel || !trashChannel || message.channelId !== IMAGES_CHANNEL_ID) {
     return;
   }
 
@@ -70,7 +74,7 @@ export const handleImageChannelMessage = async function (message: Message): Prom
 
   const messageData: IMessageData = getMessageData(message);
 
-  const imageEmbedMessage: Message = await sendImageEmbedMessage(channel, attachedImagesUrls, messageData);
+  const imageEmbedMessage: Message = await sendImageEmbedMessage(channel, trashChannel, attachedImagesUrls, messageData);
 
   imageEmbedMessage.react('💜');
 
