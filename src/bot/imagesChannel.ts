@@ -42,15 +42,17 @@ const sendImageEmbedMessage = async function (
   attachedImagesUrls: string[],
   messageData: IMessageData
 ): Promise<Message> {
+  const imageMessageInTrashChannel: Message = await trashChannel.send({ files: [attachedImagesUrls[0]] });
+
+  const imageUrlInTrashChannel = getAttachedImagesUrls(imageMessageInTrashChannel.attachments)[0];
+
   const imageEmbed: MessageEmbed = new MessageEmbed()
     .setAuthor({
       name: messageData.authorUsername,
       iconURL: messageData.authorAvatarUrl,
     })
     .setDescription(messageData.messageText)
-    .setImage(attachedImagesUrls[0]);
-
-  trashChannel.send(attachedImagesUrls[0])
+    .setImage(imageUrlInTrashChannel);
 
   const imageEmbedMessage: Message = await channel.send({ embeds: [imageEmbed] });
 
