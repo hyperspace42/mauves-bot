@@ -9,7 +9,7 @@ import { Client, Intents, Message } from 'discord.js';
 import getServerStatus from '@utils/getServerStatus';
 import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from '@bot/handlers/commands';
 
-import { deleteMessage as deleteMessageFromMinecraftMessagesChannel } from '@bot/nats/minecraftMessagesChannel';
+import deleteChatMessage from '@bot/minecraft-chat/deleteMessageInChatChannel';
 import { handleImageChannelMessage } from '@bot/handlers/imagesChannel';
 import setBotActivity from '@bot/utils/botActivity';
 
@@ -38,7 +38,7 @@ export const startBot = function (TOKEN: string) {
 
   bot.on('messageCreate', async (message: Message) => {
     if (message.author.bot) return;
-    if (deleteMessageFromMinecraftMessagesChannel(message)) return;
+    if (await deleteChatMessage(message)) return;
 
     await handleImageChannelMessage(message);
 

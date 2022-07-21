@@ -6,13 +6,15 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import listenChannel from '@nats-client/index';
 import { startBot } from '@bot/index';
-import { sendMessageEmbed } from '@bot/nats/minecraftMessagesChannel';
-import { sendJoinMessage, sendLeaveMessage } from '@bot/nats/minecraftConnectionChannel';
+import { sendJoinMessageEmbed, sendLeaveMessageEmbed } from '@bot/minecraft-chat/minecraftConnectionChannel';
+import sendChatMessageEmbed from '@bot/minecraft-chat/minecraftMessagesChannel';
+import sendDeathMessageEmbed from '@bot/minecraft-chat/minecraftDeathChannel';
 
 const BOT_TOKEN: string = nconf.get('BOT_TOKEN');
 
-listenChannel('chat.global', sendMessageEmbed);
-listenChannel('chat.join', sendJoinMessage);
-listenChannel('chat.leave', sendLeaveMessage);
+listenChannel('chat.global', sendChatMessageEmbed);
+listenChannel('chat.join', sendJoinMessageEmbed);
+listenChannel('chat.leave', sendLeaveMessageEmbed);
+listenChannel('chat.death', sendDeathMessageEmbed);
 
 startBot(BOT_TOKEN);

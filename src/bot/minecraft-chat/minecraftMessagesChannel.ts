@@ -4,13 +4,13 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import { INatsChatGlobalMessage } from 'types';
 
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { MessageEmbed, TextChannel } from 'discord.js';
 import getHeadImageLinkByUsername from '@utils/getHeadImageLinkByUsername';
 import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
 
 const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
 
-export const sendMessageEmbed = async function (params: INatsChatGlobalMessage) {
+export default async function sendMessageEmbed(params: INatsChatGlobalMessage) {
   const channel = await getDiscordChannelById(MINECRAFT_MESSAGES_CHANNEL_ID) as TextChannel | null;
 
   if (!channel) {
@@ -27,13 +27,4 @@ export const sendMessageEmbed = async function (params: INatsChatGlobalMessage) 
     .setFooter({ text: 'Чат сервера #Mauves' });
 
   await channel.send({ embeds: [minecraftMessageEmbed] });
-};
-
-export const deleteMessage = function (message: Message): boolean {
-  if (message.channelId === MINECRAFT_MESSAGES_CHANNEL_ID) {
-    message.delete();
-    return true;
-  }
-
-  return false;
 };
