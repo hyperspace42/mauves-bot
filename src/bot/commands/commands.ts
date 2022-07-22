@@ -1,6 +1,6 @@
 import { IServerStatus } from '$types';
 
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { MessageEmbed, TextChannel, CommandInteraction } from 'discord.js';
 
 import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
 import getServerStatus from '@utils/getServerStatus';
@@ -15,13 +15,7 @@ const commandsDescriptionList: {
   players: 'Отправляет список игроков на сервере в данный момент',
 };
 
-const sendCommandsEmbed = async function (channelId: string): Promise<void> {
-  const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
-
-  if (!channel) {
-    return;
-  }
-
+const sendCommandsEmbed = async function (interaction: CommandInteraction): Promise<void> {
   const commandEmbed = new MessageEmbed()
     .setTitle('Команды бота')
     .setColor('BLURPLE')
@@ -31,16 +25,10 @@ const sendCommandsEmbed = async function (channelId: string): Promise<void> {
     commandEmbed.addField(`!${command}`, commandsDescriptionList[command]);
   }
 
-  await channel.send({ embeds: [commandEmbed] });
+  await interaction.reply({ embeds: [commandEmbed] });
 };
 
-const sendStatusEmbed = async function (channelId: string, status: IServerStatus) {
-  const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
-
-  if (!channel) {
-    return;
-  }
-
+const sendStatusEmbed = async function (interaction: CommandInteraction, status: IServerStatus) {
   let statusEmbed: MessageEmbed;
 
   if (status.online) {
@@ -59,16 +47,10 @@ const sendStatusEmbed = async function (channelId: string, status: IServerStatus
       .addField('Сервер онлайн', 'Нет');
   }
 
-  await channel.send({ embeds: [statusEmbed] });
+  await interaction.reply({ embeds: [statusEmbed] });
 };
 
-const sendOnlinePlayersEmbed = async function (channelId: string, status: IServerStatus) {
-  const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
-
-  if (!channel) {
-    return;
-  }
-
+const sendOnlinePlayersEmbed = async function (interaction: CommandInteraction, status: IServerStatus) {
   let statusEmbed: MessageEmbed;
 
   if (status.online) {
@@ -90,20 +72,20 @@ const sendOnlinePlayersEmbed = async function (channelId: string, status: IServe
       .addField('Сервер онлайн', 'Нет');
   }
 
-  await channel.send({ embeds: [statusEmbed] });
+  await interaction.reply({ embeds: [statusEmbed] });
 };
 
-export default async function handleCommand(command: string, message: Message): Promise<void> {
+export default async function handleCommand(command: string, interaction: CommandInteraction): Promise<void> {
   try {
     switch (command) {
       case 'commands':
-        sendCommandsEmbed(message.channelId);
+        sendCommandsEmbed(interaction);
         break;
       case 'status':
-        sendStatusEmbed(message.channelId, await getServerStatus());
+        sendStatusEmbed(interaction, await getServerStatus());
         break;
       case 'players':
-        sendOnlinePlayersEmbed(message.channelId, await getServerStatus());
+        sendOnlinePlayersEmbed(interaction, await getServerStatus());
         break;
     }
   } catch (error) {
