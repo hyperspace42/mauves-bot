@@ -1,8 +1,9 @@
-import { IServerStatus } from '../../types';
+import { IServerStatus } from '$types';
 
-import { MessageEmbed, TextChannel } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 
 import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
+import getServerStatus from '@utils/getServerStatus';
 
 import { bot } from '@bot/index';
 
@@ -14,7 +15,7 @@ const commandsDescriptionList: {
   players: 'Отправляет список игроков на сервере в данный момент',
 };
 
-export const sendCommandsEmbed = async function (channelId: string): Promise<void> {
+const sendCommandsEmbed = async function (channelId: string): Promise<void> {
   const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
 
   if (!channel) {
@@ -33,7 +34,7 @@ export const sendCommandsEmbed = async function (channelId: string): Promise<voi
   await channel.send({ embeds: [commandEmbed] });
 };
 
-export const sendStatusEmbed = async function (channelId: string, status: IServerStatus) {
+const sendStatusEmbed = async function (channelId: string, status: IServerStatus) {
   const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
 
   if (!channel) {
@@ -61,7 +62,7 @@ export const sendStatusEmbed = async function (channelId: string, status: IServe
   await channel.send({ embeds: [statusEmbed] });
 };
 
-export const sendOnlinePlayersEmbed = async function (channelId: string, status: IServerStatus) {
+const sendOnlinePlayersEmbed = async function (channelId: string, status: IServerStatus) {
   const channel = (await getDiscordChannelById(channelId)) as TextChannel | null;
 
   if (!channel) {
@@ -91,3 +92,21 @@ export const sendOnlinePlayersEmbed = async function (channelId: string, status:
 
   await channel.send({ embeds: [statusEmbed] });
 };
+
+export default async function handleCommand(command: string, message: Message): Promise<void> {
+  try {
+    switch (command) {
+      case 'commands':
+        sendCommandsEmbed(message.channelId);
+        break;
+      case 'status':
+        sendStatusEmbed(message.channelId, await getServerStatus());
+        break;
+      case 'players':
+        sendOnlinePlayersEmbed(message.channelId, await getServerStatus());
+        break;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

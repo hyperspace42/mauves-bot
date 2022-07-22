@@ -20,7 +20,7 @@ const connectToNats = async function (): Promise<NatsConnection> {
     token: NATS_TOKEN,
   });
 
-  console.log(`Connected to nats server ${NATS_SERVER_URL}`);
+  console.log(`[~] Connected to nats server ${NATS_SERVER_URL}`);
 
   return natsConnetion;
 };
@@ -29,7 +29,7 @@ const subscribeToChannel = async function(connectionPromise: Promise<NatsConnect
   const natsConnetion: NatsConnection = await connectionPromise;
   const sub: Subscription = await natsConnetion.subscribe(channelName);
 
-  console.log(`Subscribed on ${channelName}`);
+  console.log(`[~] Subscribed on ${channelName}`);
 
   return sub;
 }

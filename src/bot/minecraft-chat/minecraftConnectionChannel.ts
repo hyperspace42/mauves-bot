@@ -4,46 +4,43 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import { INatsMinecraftServerConnetionMessage } from 'types';
 
-import { MessageEmbed, TextChannel } from 'discord.js';
-import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
+import { WebhookClient } from 'discord.js';
 import setBotActivity from '@bot/utils/botActivity';
 
-const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
+const MINECRAFT_MESSAGES_WEBHOOK_URL: string = nconf.get('MINECRAFT_MESSAGES_WEBHOOK_URL');
+
+const webhookClient: WebhookClient = new WebhookClient({ url: MINECRAFT_MESSAGES_WEBHOOK_URL });
+
+const connectionAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000076297898315816/connections_avatar.png';
 
 export const sendJoinMessageEmbed = async function (params: INatsMinecraftServerConnetionMessage) {
-  const channel = (await getDiscordChannelById(MINECRAFT_MESSAGES_CHANNEL_ID)) as TextChannel | null;
-
-  if (!channel) {
-    return;
-  }
-
   const nickname: string = params.player;
 
   setBotActivity();
 
-  const joinMessageEmbed: MessageEmbed = new MessageEmbed()
-    .setColor('#ffcd75')
-    .setDescription(`${nickname} зашел на сервер!`)
-    .setFooter({ text: 'Чат сервера #Mauves' });
-
-  await channel.send({ embeds: [joinMessageEmbed] });
+  try {
+    await webhookClient.send({
+      content: `${nickname} зашел на сервер!`,
+      username: 'Подключения',
+      avatarURL: connectionAvatarUrl,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const sendLeaveMessageEmbed = async function (params: INatsMinecraftServerConnetionMessage) {
-  const channel = (await getDiscordChannelById(MINECRAFT_MESSAGES_CHANNEL_ID)) as TextChannel | null;
-
-  if (!channel) {
-    return;
-  }
-
   const nickname: string = params.player;
 
   setBotActivity();
 
-  const leaveMessageEmbed: MessageEmbed = new MessageEmbed()
-    .setColor('#ffcd75')
-    .setDescription(`${nickname} вышел с сервера.`)
-    .setFooter({ text: 'Чат сервера #Mauves' });
-
-  await channel.send({ embeds: [leaveMessageEmbed] });
+  try {
+    await webhookClient.send({
+      content: `${nickname} вышел с сервера.`,
+      username: 'Подключения',
+      avatarURL: connectionAvatarUrl,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

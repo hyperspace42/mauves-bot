@@ -6,11 +6,10 @@ import dayjs from 'dayjs';
 
 import { Client, Intents, Message } from 'discord.js';
 
-import getServerStatus from '@utils/getServerStatus';
-import { sendCommandsEmbed, sendOnlinePlayersEmbed, sendStatusEmbed } from '@bot/handlers/commands';
+import handleCommand from '@bot/handlers/commands';
 
 import deleteChatMessage from '@bot/minecraft-chat/deleteMessageInChatChannel';
-import { handleImageChannelMessage } from '@bot/handlers/imagesChannel';
+import handleImageChannelMessage from '@bot/handlers/imagesChannel';
 import setBotActivity from '@bot/utils/botActivity';
 
 const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
@@ -33,7 +32,7 @@ export const startBot = function (TOKEN: string) {
   bot.once('ready', () => {
     setBotActivity();
 
-    console.log('Bot started');
+    console.log('[~] Bot started');
   });
 
   bot.on('messageCreate', async (message: Message) => {
@@ -52,21 +51,7 @@ export const startBot = function (TOKEN: string) {
 
     const command: string = message.content.slice(1);
 
-    try {
-      switch (command) {
-        case 'commands':
-          sendCommandsEmbed(message.channelId);
-          break;
-        case 'status':
-          sendStatusEmbed(message.channelId, await getServerStatus());
-          break;
-        case 'players':
-          sendOnlinePlayersEmbed(message.channelId, await getServerStatus());
-          break;
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await handleCommand(command, message)
   });
 
   bot.login(TOKEN);

@@ -36,6 +36,7 @@ const getMessageData = function (message: Message): IMessageData {
 
   return { authorUsername, authorAvatarUrl, messageText };
 };
+
 const sendImageEmbedMessage = async function (
   channel: TextChannel,
   trashChannel: TextChannel,
@@ -59,7 +60,7 @@ const sendImageEmbedMessage = async function (
   return imageEmbedMessage;
 };
 
-export const handleImageChannelMessage = async function (message: Message): Promise<void> {
+export default async function handleImageChannelMessage(message: Message): Promise<void> {
   const channel = (await getDiscordChannelById(IMAGES_CHANNEL_ID)) as TextChannel | null;
   const trashChannel = (await getDiscordChannelById(TRASH_IMAGES_CHANNEL_ID)) as TextChannel | null;
 

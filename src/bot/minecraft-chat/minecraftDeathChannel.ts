@@ -4,10 +4,13 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import { INatsMinecraftServerConnetionMessage } from 'types';
 
-import { MessageEmbed, TextChannel } from 'discord.js';
-import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
+import { WebhookClient } from 'discord.js';
 
-const MINECRAFT_MESSAGES_CHANNEL_ID: string = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
+const MINECRAFT_MESSAGES_WEBHOOK_URL: string = nconf.get('MINECRAFT_MESSAGES_WEBHOOK_URL');
+
+const webhookClient: WebhookClient = new WebhookClient({ url: MINECRAFT_MESSAGES_WEBHOOK_URL });
+
+const deathAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000077170095423548/death_avatar.png';
 
 const deathReactions: string[] = [
   ':c',
@@ -27,19 +30,16 @@ const getRandomDeathReaction = function(): string {
 }
 
 export default async function sendDeathEmbed(params: INatsMinecraftServerConnetionMessage) {
-  const channel = (await getDiscordChannelById(MINECRAFT_MESSAGES_CHANNEL_ID)) as TextChannel | null;
-
-  if (!channel) {
-    return;
-  }
-
   const nickname: string = params.player;
   const deathReaction: string = getRandomDeathReaction()
 
-  const joinMessageEmbed: MessageEmbed = new MessageEmbed()
-    .setColor('#ff4754')
-    .setDescription(`${nickname} умер ${deathReaction}`)
-    .setFooter({ text: 'Чат сервера #Mauves' });
-
-  await channel.send({ embeds: [joinMessageEmbed] });
+  try {
+    await webhookClient.send({
+      content: `${nickname} умер ${deathReaction}`,
+      username: 'Смерти',
+      avatarURL: deathAvatarUrl
+    })
+  } catch (error) {
+    console.log(error);
+  }
 }
