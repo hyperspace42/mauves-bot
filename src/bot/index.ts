@@ -10,7 +10,7 @@ import { Client, Intents, CommandInteraction, Message } from 'discord.js';
 
 import handleCommand from '@bot/commands/commands';
 
-import deleteChatMessage from '@bot/minecraft-chat/deleteMessage';
+import deleteChatMessage from '@bot/handlers/deleteMessage';
 import handleImageChannelMessage from '@bot/handlers/imagesChannel';
 import setBotActivity from '@bot/utils/botActivity';
 

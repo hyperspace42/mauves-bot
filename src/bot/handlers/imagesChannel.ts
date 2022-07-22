@@ -83,7 +83,7 @@ export default async function handleImageChannelMessage(message: Message): Promi
 
   imageEmbedMessage.startThread({
     name: '💬 Комментарии',
-    autoArchiveDuration: 4320,
+    autoArchiveDuration: 1440,
   });
 
   await message.delete();
