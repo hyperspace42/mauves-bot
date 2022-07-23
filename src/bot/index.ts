@@ -24,7 +24,7 @@ const logCommandMessage = function (interaction: CommandInteraction): void {
   const authorUsername: string = `${user.username}#${user.discriminator}`;
   const time = dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]');
 
-  console.log(`${time} [${authorUsername}] ${commandName}`);
+  console.log(`${time} [${authorUsername}] /${commandName}`);
 };
 
 export const startBot = function (TOKEN: string) {

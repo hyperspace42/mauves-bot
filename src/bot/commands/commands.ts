@@ -1,8 +1,7 @@
 import { IServerStatus } from '$types';
 
-import { MessageEmbed, TextChannel, CommandInteraction } from 'discord.js';
+import { MessageEmbed, CommandInteraction } from 'discord.js';
 
-import getDiscordChannelById from '@bot/utils/getDiscordChannelById';
 import getServerStatus from '@utils/getServerStatus';
 
 import { bot } from '@bot/index';
@@ -22,7 +21,7 @@ const sendCommandsEmbed = async function (interaction: CommandInteraction): Prom
     .setThumbnail(bot.user?.avatarURL() as string);
 
   for (const command in commandsDescriptionList) {
-    commandEmbed.addField(`!${command}`, commandsDescriptionList[command]);
+    commandEmbed.addField(`/${command}`, commandsDescriptionList[command]);
   }
 
   await interaction.reply({ embeds: [commandEmbed] });
