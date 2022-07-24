@@ -14,6 +14,17 @@ const commands = [
   new SlashCommandBuilder().setName('commands').setDescription('Отправляет все команды бота'),
   new SlashCommandBuilder().setName('status').setDescription('Отправляет статус сервера'),
   new SlashCommandBuilder().setName('players').setDescription('Отправляет список игроков на сервере в данный момент'),
+  new SlashCommandBuilder()
+    .setName('nickname')
+    .setDescription('Действия с вашим никнеймом на сервере')
+    .addSubcommand((subcommand) => subcommand.setName('info').setDescription('Доступные команды связанные с никнеймом на сервере'))
+    .addSubcommand((subcommand) => subcommand.setName('get').setDescription('Узнать свой ник на сервере'))
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName('set')
+        .setDescription('Изменить ник на сервере')
+        .addStringOption((option) => option.setName('nickname').setDescription('Новый никнейм'))
+    ),
 ].map((command) => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);

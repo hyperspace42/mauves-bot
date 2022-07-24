@@ -4,7 +4,7 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import dayjs from 'dayjs';
 
-import '@bot/command/deployCommands'
+import '@bot/command/deployCommands';
 
 import { Client, Intents, CommandInteraction, Message } from 'discord.js';
 
@@ -13,17 +13,19 @@ import deleteChatMessage from '@bot/handlers/deleteMessage';
 import handleImageChannelMessage from '@bot/handlers/imagesChannel';
 import setBotActivity from '@bot/utils/botActivity';
 
-const MINECRAFT_MESSAGES_CHANNEL_ID = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID')
+const MINECRAFT_MESSAGES_CHANNEL_ID = nconf.get('MINECRAFT_MESSAGES_CHANNEL_ID');
 
 export const bot: Client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const logCommandMessage = function (interaction: CommandInteraction): void {
   const { user, commandName } = interaction;
 
+  const subcommand: string = interaction.options.getSubcommand(false) ?? '';
+
   const authorUsername: string = `${user.username}#${user.discriminator}`;
   const time = dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]');
 
-  console.log(`${time} [${authorUsername}] /${commandName}`);
+  console.log(`${time} [${authorUsername}] /${commandName} ${subcommand}`);
 };
 
 export const startBot = function (TOKEN: string) {
@@ -35,12 +37,12 @@ export const startBot = function (TOKEN: string) {
 
   bot.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
-  
+
     const { commandName } = interaction;
 
-    logCommandMessage(interaction)
-    
-    await handleCommand(commandName, interaction)
+    logCommandMessage(interaction);
+
+    await handleCommand(commandName, interaction);
   });
 
   bot.on('messageCreate', async (message: Message) => {
