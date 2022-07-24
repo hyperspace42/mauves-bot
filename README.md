@@ -11,6 +11,5 @@
   "MINECRAFT_MESSAGES_WEBHOOK_URL": "webhook for minecraft messages channel",
   "IMAGES_CHANNEL_ID": "channel where users can send extended images",
   "TRASH_IMAGES_CHANNEL_ID": "channel where the pictures will be sent so that the links to them remain valid",
-  "MINECRAFT_SERVER_CONNECTION_CHANNEL_ID": "channel where messages about players connections will be sent"
 }
 ```
