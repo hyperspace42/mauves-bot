@@ -9,7 +9,7 @@ const infoEmbed = function (): MessageEmbed {
     .setThumbnail(bot.user?.avatarURL() as string)
     .addField('info', 'Отправляет команды связанные с ником на сервере')
     .addField('get', 'Узнать ник на сервере, привязанный к вашему дискорду')
-    .addField('set {nickname}', 'Изменить привязанный квашему дискорду никнейм на сервере');
+    .addField('set {nickname}', 'Изменить привязанный к вашему дискорду никнейм на сервере');
 
   return embed;
 };
