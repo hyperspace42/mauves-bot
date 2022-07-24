@@ -2,9 +2,11 @@ import nconf from 'nconf';
 
 nconf.file(`${process.cwd()}/config.json`);
 
-import { INatsMinecraftServerConnetionMessage } from 'types';
+import { INatsDeathMessage } from 'types';
 
 import { WebhookClient } from 'discord.js';
+
+import translations from '$translations';
 
 const MINECRAFT_MESSAGES_WEBHOOK_URL: string = nconf.get('MINECRAFT_MESSAGES_WEBHOOK_URL');
 
@@ -23,19 +25,34 @@ const deathReactions: string[] = [
   ':partying_face:',
 ];
 
-const getRandomDeathReaction = function(): string {
-  const index: number = Math.floor(Math.random() * deathReactions.length)
+const getRandomDeathReaction = function (): string {
+  const index: number = Math.floor(Math.random() * deathReactions.length);
 
-  return deathReactions[index]
-}
+  return deathReactions[index];
+};
 
-export default async function sendDeathEmbed(params: INatsMinecraftServerConnetionMessage) {
-  const nickname: string = params.player;
-  const deathReaction: string = getRandomDeathReaction()
+const insertValuesInDeathMessageTemplate = function (template: string, args: string[]): string {
+  const regex = /%\d\$s/gi;
+
+  const deathMessage = template.replace(regex, function (matched: string) {
+    const argIndex: number = +matched[1] - 1
+
+    return args.at(argIndex) as string;
+  });
+
+  return deathMessage
+};
+
+export default async function sendDeathEmbed(params: INatsDeathMessage) {
+  const deathMessageTemplate: string = translations[params.translationKey];
+
+  const deathMessage: string = insertValuesInDeathMessageTemplate(deathMessageTemplate, params.args)
+
+  const deathReaction: string = getRandomDeathReaction();
 
   try {
     await webhookClient.send({
-      content: `${nickname} умер ${deathReaction}`,
+      content: `${deathMessage} ${deathReaction}`,
       username: 'Смерти',
       avatarURL: deathAvatarUrl
     })

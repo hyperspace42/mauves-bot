@@ -2,7 +2,7 @@ import nconf from 'nconf';
 
 nconf.file(`${process.cwd()}/config.json`);
 
-import { INatsMinecraftServerConnetionMessage } from 'types';
+import { INatsServerConnetionMessage } from 'types';
 
 import { WebhookClient } from 'discord.js';
 import setBotActivity from '@bot/utils/botActivity';
@@ -13,7 +13,7 @@ const webhookClient: WebhookClient = new WebhookClient({ url: MINECRAFT_MESSAGES
 
 const connectionAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000076297898315816/connections_avatar.png';
 
-export const sendJoinMessageEmbed = async function (params: INatsMinecraftServerConnetionMessage) {
+export const sendJoinMessageEmbed = async function (params: INatsServerConnetionMessage) {
   const nickname: string = params.player;
 
   setBotActivity();
@@ -29,7 +29,7 @@ export const sendJoinMessageEmbed = async function (params: INatsMinecraftServer
   }
 };
 
-export const sendLeaveMessageEmbed = async function (params: INatsMinecraftServerConnetionMessage) {
+export const sendLeaveMessageEmbed = async function (params: INatsServerConnetionMessage) {
   const nickname: string = params.player;
 
   setBotActivity();

@@ -33,8 +33,9 @@
       "@utils/*": ["utils/*"],
       "@bot/*": ["bot/*"],
       "@nats-client/*": ["nats-client/*"],
-      "$types": ["types"]
-    }, // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
+      "$types": ["types"],
+      "$translations": ["translations"]
+      }, // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */

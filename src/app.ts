@@ -15,6 +15,6 @@ const BOT_TOKEN: string = nconf.get('BOT_TOKEN');
 listenChannel('chat.global', sendChatMessageEmbed);
 listenChannel('chat.join', sendJoinMessageEmbed);
 listenChannel('chat.leave', sendLeaveMessageEmbed);
-listenChannel('chat.death', sendDeathMessageEmbed);
+listenChannel('death', sendDeathMessageEmbed);
 
 startBot(BOT_TOKEN);

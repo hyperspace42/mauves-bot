@@ -3,8 +3,13 @@ export interface INatsChatGlobalMessage {
   message: string;
 }
 
-export interface INatsMinecraftServerConnetionMessage {
+export interface INatsServerConnetionMessage {
   player: string;
+}
+
+export interface  INatsDeathMessage {
+  translationKey: string,
+  args: string[]
 }
 
 export interface IServerStatus {

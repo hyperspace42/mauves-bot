@@ -28,7 +28,8 @@
     "@utils": "src/utils/",
     "@bot": "src/bot/",
     "@nats-client": "src/nats-client/",
-    "$types": "src/types"
+    "$types": "src/types",
+    "$translations": "src/translations"
   },
   "_moduleDirectories": [
     "node_modules_custom"
