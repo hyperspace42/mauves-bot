@@ -12,7 +12,7 @@ const MINECRAFT_MESSAGES_WEBHOOK_URL: string = nconf.get('MINECRAFT_MESSAGES_WEB
 
 const webhookClient: WebhookClient = new WebhookClient({ url: MINECRAFT_MESSAGES_WEBHOOK_URL });
 
-const deathAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000077170095423548/death_avatar.png';
+const deathAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000740191142686801/death-avatar.png';
 
 const deathReactions: string[] = [
   ':c',

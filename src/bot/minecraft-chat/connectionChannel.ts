@@ -11,7 +11,7 @@ const MINECRAFT_MESSAGES_WEBHOOK_URL: string = nconf.get('MINECRAFT_MESSAGES_WEB
 
 const webhookClient: WebhookClient = new WebhookClient({ url: MINECRAFT_MESSAGES_WEBHOOK_URL });
 
-const connectionAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000076297898315816/connections_avatar.png';
+const connectionAvatarUrl: string = 'https://cdn.discordapp.com/attachments/999133560785092663/1000740191482429500/connection-avatar.png';
 
 export const sendJoinMessageEmbed = async function (params: INatsServerConnetionMessage) {
   const nickname: string = params.player;
