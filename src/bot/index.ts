@@ -4,12 +4,11 @@ nconf.file(`${process.cwd()}/config.json`);
 
 import dayjs from 'dayjs';
 
-import '@bot/commands/deployCommands'
+import '@bot/command/deployCommands'
 
 import { Client, Intents, CommandInteraction, Message } from 'discord.js';
 
-import handleCommand from '@bot/commands/commands';
-
+import handleCommand from '@bot/command/handleCommand';
 import deleteChatMessage from '@bot/handlers/deleteMessage';
 import handleImageChannelMessage from '@bot/handlers/imagesChannel';
 import setBotActivity from '@bot/utils/botActivity';
