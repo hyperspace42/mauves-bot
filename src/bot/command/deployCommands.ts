@@ -14,6 +14,7 @@ const commands = [
   new SlashCommandBuilder().setName('commands').setDescription('Отправляет все команды бота'),
   new SlashCommandBuilder().setName('status').setDescription('Отправляет статус сервера'),
   new SlashCommandBuilder().setName('players').setDescription('Отправляет список игроков на сервере в данный момент'),
+  new SlashCommandBuilder().setName('whitelist').setDescription('Проверка на наличие в вайтлисте'),
   new SlashCommandBuilder()
     .setName('nickname')
     .setDescription('Действия с вашим никнеймом на сервере')

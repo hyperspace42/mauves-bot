@@ -26,10 +26,14 @@ export default async function nickname(interaction: CommandInteraction) {
 
         break;
       case 'get':
+        // make request
+
         interaction.reply('get');
 
         break;
       case 'set':
+        // make request
+
         interaction.reply(interaction.options.getString('nickname') as string);
 
         break;

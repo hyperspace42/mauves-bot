@@ -6,21 +6,27 @@ import sendCommandsEmbed from './commands/commandsEmbed';
 import sendStatusEmbed from './commands/statusEmbed';
 import sendOnlinePlayersEmbed from './commands/onlinePlayersEmbed';
 import nickname from './commands/nickname';
+import whitelist from './commands/whitelist';
 
 export default async function handleCommand(command: string, interaction: CommandInteraction): Promise<void> {
   try {
     switch (command) {
       case 'commands':
-        sendCommandsEmbed(interaction);
+        await sendCommandsEmbed(interaction);
         break;
       case 'status':
-        sendStatusEmbed(interaction, await getServerStatus());
+        await sendStatusEmbed(interaction, await getServerStatus());
         break;
       case 'players':
-        sendOnlinePlayersEmbed(interaction, await getServerStatus());
+        await sendOnlinePlayersEmbed(interaction, await getServerStatus());
         break;
       case 'nickname':
-        nickname(interaction);
+        await nickname(interaction);
+        break;
+      case 'whitelist':
+        const username: string = `${interaction.user.username}#${interaction.user.discriminator}`;
+
+        await whitelist(interaction, username);
         break;
     }
   } catch (error) {
